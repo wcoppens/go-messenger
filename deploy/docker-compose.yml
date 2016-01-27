@@ -1,13 +1,33 @@
+auth-service:
+    tty: true
+    command:
+    - "-l"
+    - "debug"
+    - "-t"
+    - "console"
+    - "run"
+    - "--db-host"
+    - "mysql-master"
+    - "-p"
+    - "9000"
+    image: usman/go-auth:${auth_version}
+    stdin_open: true
+    links:
+    - mysql-master:mysql-master
+
 auth-lb:
-  expose:
-  - 9090:9000
   ports:
-  - 9000
+  - '9000'
+  - '9001'
+  labels:
+    io.rancher.loadbalancer.ssl.ports: '9001'
+    io.rancher.loadbalancer.target.auth-service: 9000=9000,9001=9000
   tty: true
   image: rancher/load-balancer-service
   links:
   - auth-service:auth-service
   stdin_open: true
+
 mysql-master:
   environment:
     MYSQL_ROOT_PASSWORD: rootpass
@@ -16,23 +36,4 @@ mysql-master:
     MYSQL_PASSWORD: messenger
   tty: true
   image: mysql
-  stdin_open: true
-auth-service:
-  tty: true
-  command:
-  - --db-host
-  - mysql-master
-  - --db-port
-  - '3306'
-  - --db-user
-  - messenger
-  - --db-password
-  - messenger
-  - --database
-  - messenger
-  - -p
-  - '9000'
-  image: mbsheikh/go-messenger
-  links:
-  - mysql-master:mysql-master
   stdin_open: true
