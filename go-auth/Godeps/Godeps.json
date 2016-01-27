@@ -3,9 +3,7 @@
 	"GoVersion": "go1.4.2",
 	"Deps": [
 		{
-			"ImportPath": "github.com/golang/crypto",
-			"Comment": "null-236",
-			"Rev": "1f22c0103821b9390939b6776727195525381532"
+			"ImportPath": "golang.org/x/crypto/bcrypto"
 		},
 		{
 			"ImportPath": "github.com/stretchr/testify",
